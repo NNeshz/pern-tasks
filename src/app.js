@@ -1,26 +1,31 @@
-import express from 'express';
-import morgan from 'morgan';
+import express from "express";
+import morgan from "morgan";
+
+import tasksRoutes from "./routes/tasks.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
-app.use(morgan('dev'));
+// Middlewares
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
-    res.json({ message: "Welcome to my API"})
-})
+// Routes
+app.use("/api", tasksRoutes);
+app.use("/api", authRoutes);
 
 app.get("/test", (req, res) => {
-    throw new Error("Error de conexion")
-    res.send("Test")
-})
+  throw new Error("Error de conexion");
+  res.send("Test");
+});
 
+// Error handler
 app.use((err, req, res, next) => {
-    res.status(500).json({
-        status: "error",
-        message: err.message
-    })
-})
+  res.status(500).json({
+    status: "error",
+    message: err.message,
+  });
+});
 
 export default app;
