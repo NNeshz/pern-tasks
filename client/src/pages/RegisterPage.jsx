@@ -1,6 +1,8 @@
 function RegisterPage() {
   return (
-    <div>RegisterPage</div>
+    <div>
+      <h3 className="text-2xl font-bold">RegisterPage</h3>
+    </div>
   )
 }
 
