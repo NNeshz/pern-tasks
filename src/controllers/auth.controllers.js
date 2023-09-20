@@ -1,10 +1,33 @@
 import { pool } from "../db.js";
 import bcrypt from "bcrypt";
 
-import { createAccesToken } from "../libs/jwt.js"
+import { createAccesToken } from "../libs/jwt.js";
 
-export const signin = (req, res) => {
-  res.send("signin");
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  const result = await pool.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+
+  if (result.rowCount === 0)
+    return res.status(401).json({ message: "Usuario no encontrado" });
+
+  const validPassword = await bcrypt.compare(password, result.rows[0].password);
+  if (!validPassword)
+    return res.status(400).json({
+      message: "Contraseña incorrecta",
+    });
+
+  const token = await createAccesToken({ id: result.rows[0].id });
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000, // 1 día
+  });
+
+  return res.json(result.rows[0]);
 };
 
 export const signup = async (req, res, next) => {
@@ -18,15 +41,15 @@ export const signup = async (req, res, next) => {
       [email, hashedPassword, name]
     );
 
-    const token = await createAccesToken({ id: result.rows[0].id})
+    const token = await createAccesToken({ id: result.rows[0].id });
 
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000 // 1 día
-    })
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+    });
 
-    return res.json(result.rows[0])
+    return res.json(result.rows[0]);
   } catch (error) {
     if (error.code === "23505") {
       return res.status(409).json({ message: "Usuario ya existe" });
@@ -36,9 +59,14 @@ export const signup = async (req, res, next) => {
 };
 
 export const signout = (req, res) => {
-  res.send("signout");
+  res.clearCookie("token");
+  res.sendStatus(204);
 };
 
-export const profile = (req, res) => {
-  res.send("profile");
+export const profile = async (req, res) => {
+  const result = await pool.query("SELECT * FROM users WHERE id = $1", [
+    req.userId,
+  ]);
+
+  return res.json(result.rows[0]);
 };
