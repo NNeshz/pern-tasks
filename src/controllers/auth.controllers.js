@@ -19,10 +19,14 @@ export const signup = async (req, res, next) => {
     );
 
     const token = await createAccesToken({ id: result.rows[0].id})
-    // res.json(result.rows[0]);
-    return res.json({
-      token: token
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000 // 1 día
     })
+
+    return res.json(result.rows[0])
   } catch (error) {
     if (error.code === "23505") {
       return res.status(409).json({ message: "Usuario ya existe" });
