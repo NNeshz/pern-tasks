@@ -1,6 +1,7 @@
-import { Card, Button, Input } from "../components/ui";
+import { Card, Button, Input, Label } from "../components/ui";
 import { useForm } from "react-hook-form";
-import axios from 'axios'
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 function RegisterPage() {
   const {
@@ -9,11 +10,15 @@ function RegisterPage() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit( async (data) => {
-    const response = await axios.post("http://localhost:3000/api/signup", data, {
-      withCredentials: true
-    })
-    console.log(response)
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await axios.post(
+      "http://localhost:3000/api/signup",
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    console.log(response);
   });
 
   return (
@@ -22,6 +27,7 @@ function RegisterPage() {
         <h3 className="text-2xl font-bold">Register Page</h3>
 
         <form onSubmit={onSubmit}>
+          <Label htmlFor="name">Name:</Label>
           <Input
             placeholder="Enter your fullname"
             {...register("name", {
@@ -29,6 +35,7 @@ function RegisterPage() {
             })}
           />
           {errors.name && <p className="text-red-500">Name is required</p>}
+          <Label htmlFor="email">Email:</Label>
           <Input
             placeholder="Enter your email"
             type="email"
@@ -38,6 +45,7 @@ function RegisterPage() {
             })}
           />
           {errors.email && <p className="text-red-500">Name is required</p>}
+          <Label htmlFor="password">Password:</Label>
           <Input
             placeholder="Enter your password"
             type="password"
@@ -48,6 +56,14 @@ function RegisterPage() {
           {errors.password && <p className="text-red-500">Name is required</p>}
 
           <Button>Register</Button>
+          <div>
+            <p>
+              Already have an account? 
+              <Link to="/login" className="font-bold">
+                Login
+              </Link>
+            </p>
+          </div>
         </form>
       </Card>
     </div>
