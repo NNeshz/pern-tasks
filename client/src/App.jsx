@@ -21,7 +21,7 @@ function App() {
       <Route path="/tasks/new" element={<TaskFormPage />} />
       <Route path="/tasks/1/edit" element={<TaskFormPage />} />
       <Route path="/profile" element={<ProfilePage />} />
-      
+
       <Route path="/*" element={<NotFound />} />
     </Routes>
   );
