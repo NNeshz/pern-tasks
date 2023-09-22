@@ -28,7 +28,7 @@ function LoginPage() {
             </p>
           ))}
 
-        <h1 className="text-2xl font-bold">Sin In Page</h1>
+        <h1 className="text-2xl font-bold">Login Page</h1>
         <form onSubmit={onSubmit}>
           <Label htmlFor="email">Email</Label>
           <Input
