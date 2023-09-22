@@ -5,17 +5,29 @@ import { useAuth } from "../context/authContext";
 
 function LoginPage() {
   const { register, handleSubmit } = useForm();
-  const { signin } = useAuth();
+  const { signin, errors } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {
-    await signin(data);
-    navigate("/profile");
+    const user = await signin(data);
+    if (user) {
+      navigate("/profile");
+    }
   });
 
   return (
     <div className="h-[calc(100vh-64px)] flex justify-center items-center">
       <Card>
+        {errors &&
+          errors.map((err, i) => (
+            <p
+              className="bg-red-500 text-white px-3 py-2 text-center rounded-sm"
+              key={i}
+            >
+              {err}
+            </p>
+          ))}
+
         <h1 className="text-2xl font-bold">Sin In Page</h1>
         <form onSubmit={onSubmit}>
           <Label htmlFor="email">Email</Label>
