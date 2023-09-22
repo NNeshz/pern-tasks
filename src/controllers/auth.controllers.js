@@ -11,13 +11,11 @@ export const signin = async (req, res) => {
   ]);
 
   if (result.rowCount === 0)
-    return res.status(401).json({ message: "Usuario no encontrado" });
+    return res.status(401).json([ "Usuario no encontrado" ]);
 
   const validPassword = await bcrypt.compare(password, result.rows[0].password);
   if (!validPassword)
-    return res.status(400).json({
-      message: "Contraseña incorrecta",
-    });
+    return res.status(400).json([ "Contraseña incorrecta" ]);
 
   const token = await createAccesToken({ id: result.rows[0].id });
 
@@ -55,7 +53,7 @@ export const signup = async (req, res, next) => {
     return res.json(result.rows[0]);
   } catch (error) {
     if (error.code === "23505") {
-      return res.status(409).json({ message: "Usuario ya existe" });
+      return res.status(409).json([ "Usuario ya existe" ]);
     }
     next(error);
   }
