@@ -1,5 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
+
 import { useAuth } from "./context/authContext";
+import { TaskProvider } from "./context/tasksContext";
 
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -20,17 +22,30 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route element={<ProtectedRoute isAllowed={!isAuth} redirectTo="/tasks" />}>
+        <Route
+          element={<ProtectedRoute isAllowed={!isAuth} redirectTo="/tasks" />}
+        >
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
 
-        <Route element={<ProtectedRoute isAllowed={isAuth} redirectTo="/login"/>}>
-          <Route path="/tasks" element={<TasksPage />} />
-          <Route path="/tasks/new" element={<TaskFormPage />} />
-          <Route path="/tasks/1/edit" element={<TaskFormPage />} />
+        <Route
+          element={<ProtectedRoute isAllowed={isAuth} redirectTo="/login" />}
+        >
+          <Route
+            element={
+              <TaskProvider>
+                <Outlet />
+              </TaskProvider>
+            }
+          >
+            <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/tasks/new" element={<TaskFormPage />} />
+            <Route path="/tasks/1/edit" element={<TaskFormPage />} />
+          </Route>
+
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
