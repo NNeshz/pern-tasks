@@ -5,12 +5,14 @@ import cors from "cors";
 
 import tasksRoutes from "./routes/tasks.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import { ORIGIN } from "./config.js";
+import { pool } from "./db.js";
 
 const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ORIGIN,
   credentials: true,
 }));
 app.use(morgan("dev"));
@@ -22,10 +24,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api", tasksRoutes);
 app.use("/api", authRoutes);
 
+// Test Routes
 app.get("/test", (req, res) => {
   throw new Error("Error de conexion");
   res.send("Test");
 });
+
+app.get("api/ping", async (req, res) => {
+  const response = await pool.query("SELECT NOW()")
+  res.send(response.rows[0]);
+})
 
 // Error handler
 app.use((err, req, res, next) => {
