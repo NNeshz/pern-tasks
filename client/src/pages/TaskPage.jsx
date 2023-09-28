@@ -5,10 +5,10 @@ import { useTask } from "../context/tasksContext"
 
 function TasksPage() {
 
-  const { tasks, loadTask } = useTask()
+  const { tasks, loadTasks } = useTask()
 
   useEffect(() => {
-    loadTask()    
+    loadTasks()    
   }, [])
 
   return (
