@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to my new API");
 });
 
-app.get("api/ping", async (req, res) => {
+app.get("/api/ping", async (req, res) => {
   const response = await pool.query("SELECT NOW()")
   res.send(response.rows[0]);
 })
