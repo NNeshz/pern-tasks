@@ -25,9 +25,8 @@ app.use("/api", tasksRoutes);
 app.use("/api", authRoutes);
 
 // Test Routes
-app.get("/test", (req, res) => {
-  throw new Error("Error de conexion");
-  res.send("Test");
+app.get("/", (req, res) => {
+  res.send("Welcome to my new API");
 });
 
 app.get("api/ping", async (req, res) => {
