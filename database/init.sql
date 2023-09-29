@@ -1,10 +1,10 @@
 CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) UNIQUE NOT NULL,
-    description TEXT,
+    description TEXT
 );
 
-ALTER TABLE task ADD COLUMN user_id INTEGER REFERENCES users(id);
+ALTER TABLE tasks ADD COLUMN user_id INTEGER REFERENCES users(id);
 
 -- remove unique from title
 ALTER TABLE task DROP CONSTRAINT task_title_key;
